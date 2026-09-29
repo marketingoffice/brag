@@ -1,0 +1,1315 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>HomeEstimator.ai — The Number Before the Plans (9:16)</title>
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Manrope";
+        src: url("assets/fonts/Manrope.woff2") format("woff2");
+        font-weight: 200 800;
+      }
+      @font-face {
+        font-family: "JetBrains Mono";
+        src: url("assets/fonts/JetBrainsMono.woff2") format("woff2");
+        font-weight: 100 800;
+      }
+      @font-face {
+        font-family: "Caveat";
+        src: url("assets/fonts/Caveat.woff2") format("woff2");
+        font-weight: 400 700;
+      }
+      :root {
+        --navy: #1a1a2e;
+        --navy-2: #2d2d44;
+        --tan: #c9a96e;
+        --gold: #d4af37;
+        --white: #ffffff;
+        --red: #d9534f;
+      }
+      body {
+        margin: 0;
+        background: var(--navy);
+        color: var(--white);
+        font-family: "Manrope", sans-serif;
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--navy);
+      }
+      .layer {
+        position: absolute;
+        inset: 0;
+      }
+      /* plain navy plan board: soft navy-to-navy light + gentle vignette only */
+      #bg-light {
+        background: radial-gradient(70% 45% at 50% 46%, rgba(45, 45, 68, 0.95) 0%, rgba(45, 45, 68, 0.35) 55%, rgba(26, 26, 46, 0) 100%);
+      }
+      #bg-vig {
+        background: radial-gradient(110% 75% at 50% 48%, rgba(26, 26, 46, 0) 60%, rgba(14, 14, 28, 0.7) 100%);
+      }
+      .mono {
+        font-family: "JetBrains Mono", monospace;
+        font-variant-numeric: tabular-nums;
+      }
+      .gold {
+        color: var(--gold);
+      }
+      .tan {
+        color: var(--tan);
+      }
+
+      /* headline zone */
+      .head {
+        position: absolute;
+        left: 70px;
+        right: 70px;
+        top: 210px;
+        height: 250px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      .h {
+        font-weight: 800;
+        font-size: 76px;
+        line-height: 1.04;
+        letter-spacing: -0.015em;
+        text-transform: uppercase;
+        max-width: 940px;
+      }
+      .h-sm {
+        font-weight: 700;
+        font-size: 44px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .sub {
+        position: absolute;
+        left: 70px;
+        right: 70px;
+        top: 1390px;
+        text-align: center;
+      }
+      .kicker {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 600;
+        font-size: 24px;
+        letter-spacing: 0.14em;
+        color: var(--tan);
+        text-transform: uppercase;
+      }
+
+      /* camera + stage */
+      #cam {
+        position: absolute;
+        left: 0;
+        top: 470px;
+        width: 1080px;
+        height: 900px;
+      }
+      #house {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 900px;
+        overflow: visible;
+      }
+      #house .edge {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.7);
+        stroke-width: 2;
+        stroke-linejoin: round;
+      }
+      #house .plan {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.55);
+        stroke-width: 2;
+        stroke-dasharray: 10 8;
+      }
+
+      /* phone */
+      #phone {
+        position: absolute;
+        left: 260px;
+        top: 460px;
+        width: 560px;
+        height: 1000px;
+        border-radius: 70px;
+        background: linear-gradient(170deg, #2d2d44, #1f1f36);
+        border: 3px solid rgba(201, 169, 110, 0.55);
+        box-shadow: 0 50px 120px rgba(5, 5, 15, 0.6), inset 0 0 0 10px #15152a;
+      }
+      #phone .notch {
+        position: absolute;
+        left: 200px;
+        top: 26px;
+        width: 160px;
+        height: 34px;
+        border-radius: 17px;
+        background: #11111f;
+      }
+      #phone .app {
+        position: absolute;
+        left: 40px;
+        right: 40px;
+        top: 110px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 20px;
+        letter-spacing: 0.12em;
+        color: var(--tan);
+      }
+      #notif {
+        position: absolute;
+        left: 32px;
+        right: 32px;
+        top: 170px;
+        padding: 28px 30px;
+        border-radius: 30px;
+        background: rgba(255, 255, 255, 0.96);
+        color: var(--navy);
+        display: flex;
+        gap: 22px;
+        align-items: center;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      }
+      #notif .av {
+        flex: none;
+        width: 76px;
+        height: 76px;
+        border-radius: 50%;
+        background: var(--navy-2);
+        color: var(--gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 34px;
+      }
+      #notif .who {
+        font-size: 22px;
+        font-weight: 600;
+        color: #55556e;
+      }
+      #notif .msg {
+        font-size: 34px;
+        font-weight: 700;
+        line-height: 1.15;
+        margin-top: 4px;
+      }
+      #scribble {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 560px;
+        text-align: center;
+        font-family: "Caveat", cursive;
+        font-weight: 700;
+        font-size: 104px;
+        color: var(--red);
+      }
+      #scribble span {
+        display: inline-block;
+      }
+
+      /* tags + markers */
+      .tag {
+        position: absolute;
+        padding: 16px 28px;
+        border-radius: 40px;
+        border: 2px solid rgba(217, 83, 79, 0.85);
+        background: rgba(26, 26, 46, 0.85);
+        font-weight: 700;
+        font-size: 34px;
+        white-space: nowrap;
+        color: #ffd9d7;
+      }
+      #redline {
+        position: absolute;
+        left: 90px;
+        right: 90px;
+        top: 1420px;
+        height: 80px;
+      }
+      #redline .bar {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 38px;
+        height: 4px;
+        background: var(--red);
+        transform-origin: 0 50%;
+      }
+      #redline .half {
+        position: absolute;
+        top: 38px;
+        height: 4px;
+        width: 50%;
+        background: var(--red);
+      }
+      #redline .lbl {
+        position: absolute;
+        top: -14px;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 26px;
+        letter-spacing: 0.1em;
+        color: #ffd9d7;
+      }
+      #cutter {
+        position: absolute;
+        left: 538px;
+        top: 1330px;
+        width: 5px;
+        height: 260px;
+        background: var(--gold);
+        box-shadow: 0 0 30px rgba(212, 175, 55, 0.9);
+      }
+
+      /* input tiles */
+      .tile {
+        position: absolute;
+        width: 200px;
+        height: 150px;
+        margin-left: -100px;
+        margin-top: -75px;
+        border-radius: 24px;
+        background: linear-gradient(160deg, rgba(45, 45, 68, 0.98), rgba(30, 30, 50, 0.98));
+        border: 2px solid rgba(212, 175, 55, 0.6);
+        box-shadow: 0 24px 50px rgba(5, 5, 15, 0.5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+      }
+      .tile svg {
+        width: 50px;
+        height: 50px;
+      }
+      .tile .tl {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 19px;
+        letter-spacing: 0.06em;
+        text-align: center;
+        line-height: 1.15;
+      }
+      #wires {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+      }
+
+      /* voice panel */
+      #voice {
+        position: absolute;
+        left: 70px;
+        right: 70px;
+        top: 1290px;
+        height: 230px;
+        border-radius: 30px;
+        background: rgba(45, 45, 68, 0.92);
+        border: 2px solid rgba(212, 175, 55, 0.5);
+        padding: 26px 34px;
+        box-sizing: border-box;
+      }
+      #wave {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        height: 70px;
+      }
+      #wave i {
+        display: block;
+        width: 9px;
+        height: 70px;
+        border-radius: 5px;
+        background: var(--gold);
+      }
+      #transcript {
+        margin-top: 22px;
+        font-weight: 700;
+        font-size: 34px;
+        line-height: 1.3;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 14px;
+      }
+      #transcript span {
+        display: inline-block;
+      }
+      .chip {
+        position: absolute;
+        padding: 12px 22px;
+        border-radius: 14px;
+        background: var(--gold);
+        color: var(--navy);
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 800;
+        font-size: 24px;
+        letter-spacing: 0.08em;
+        white-space: nowrap;
+      }
+      .swatch {
+        position: absolute;
+        width: 86px;
+        height: 86px;
+        border-radius: 18px;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+      }
+
+      /* dependencies */
+      #dep-chipwrap {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 470px;
+        display: flex;
+        justify-content: center;
+      }
+      .sel {
+        position: relative;
+        padding: 20px 34px;
+        border-radius: 18px;
+        border: 2px solid var(--gold);
+        background: rgba(212, 175, 55, 0.14);
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 800;
+        font-size: 34px;
+        letter-spacing: 0.08em;
+      }
+      #items {
+        position: absolute;
+        left: 140px;
+        right: 140px;
+        top: 590px;
+      }
+      .item {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 18px 26px;
+        margin: 12px 0;
+        border-radius: 16px;
+        background: rgba(45, 45, 68, 0.95);
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        font-weight: 700;
+        font-size: 34px;
+      }
+      .item b {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 24px;
+        color: var(--gold);
+        width: 70px;
+      }
+      #wall {
+        position: absolute;
+        left: 240px;
+        top: 780px;
+        width: 600px;
+        height: 460px;
+      }
+      .node {
+        position: absolute;
+        width: 190px;
+        margin-left: -95px;
+        margin-top: -26px;
+        padding: 12px 0;
+        border-radius: 28px;
+        text-align: center;
+        background: var(--navy-2);
+        border: 2px solid var(--gold);
+        box-shadow: 0 0 26px rgba(212, 175, 55, 0.45);
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 800;
+        font-size: 21px;
+        letter-spacing: 0.06em;
+      }
+      #stats {
+        position: absolute;
+        left: 70px;
+        right: 70px;
+        top: 1345px;
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        text-align: center;
+      }
+      .stat .n {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 800;
+        font-size: 96px;
+        line-height: 1;
+        color: var(--gold);
+      }
+      .stat .l {
+        margin-top: 10px;
+        font-weight: 700;
+        font-size: 24px;
+        letter-spacing: 0.1em;
+        max-width: 420px;
+      }
+
+      /* price logic */
+      #tiers {
+        position: absolute;
+        left: 70px;
+        right: 70px;
+        top: 500px;
+        height: 200px;
+        display: flex;
+        gap: 22px;
+        perspective: 1200px;
+      }
+      .slab {
+        flex: 1;
+        height: 170px;
+        border-radius: 20px;
+        background: linear-gradient(170deg, #34344f, #26263d);
+        border: 2px solid rgba(255, 255, 255, 0.14);
+        box-shadow: 0 16px 0 #17172a, 0 30px 50px rgba(0, 0, 0, 0.4);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+      .slab .sw {
+        width: 60px;
+        height: 14px;
+        border-radius: 7px;
+      }
+      .slab .sn {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 800;
+        font-size: 26px;
+        letter-spacing: 0.1em;
+      }
+      #slab-hl {
+        position: absolute;
+        left: 70px;
+        top: 496px;
+        width: 212px;
+        height: 178px;
+        border-radius: 22px;
+        border: 4px solid var(--gold);
+        box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+      }
+      #total {
+        position: absolute;
+        left: 70px;
+        right: 70px;
+        top: 745px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding: 0 10px;
+      }
+      #total .lbl {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 28px;
+        letter-spacing: 0.14em;
+        color: var(--tan);
+      }
+      #total .v {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 800;
+        font-size: 84px;
+      }
+      #ledger {
+        position: absolute;
+        left: 70px;
+        right: 70px;
+        top: 880px;
+        padding: 20px 36px;
+        border-radius: 30px;
+        background: rgba(45, 45, 68, 0.95);
+        border: 2px solid rgba(255, 255, 255, 0.12);
+      }
+      .lr {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 24px 0;
+        border-bottom: 1.5px solid rgba(255, 255, 255, 0.1);
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 28px;
+        letter-spacing: 0.08em;
+      }
+      .lr:last-child {
+        border-bottom: 0;
+      }
+      .lr .ok {
+        color: var(--gold);
+      }
+      .track {
+        position: relative;
+        width: 330px;
+        height: 14px;
+        border-radius: 7px;
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .track .fill {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        border-radius: 7px;
+        background: var(--tan);
+        transform-origin: 0 50%;
+      }
+      #np-floor {
+        position: absolute;
+        left: 170px;
+        top: -12px;
+        width: 3px;
+        height: 38px;
+        background: var(--white);
+      }
+      #np-handle {
+        position: absolute;
+        left: 262px;
+        top: -13px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--gold);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.7);
+      }
+      #lock {
+        width: 40px;
+        height: 40px;
+        margin-right: 14px;
+      }
+      #cursor {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 56px;
+        height: 56px;
+      }
+      #toast {
+        position: absolute;
+        left: 120px;
+        right: 120px;
+        top: 1400px;
+        padding: 22px 26px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.96);
+        color: var(--navy);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 800;
+        font-size: 26px;
+        letter-spacing: 0.06em;
+      }
+
+      /* proposal */
+      #pdf-wrap {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 480px;
+        display: flex;
+        justify-content: center;
+        perspective: 1600px;
+      }
+      #pdf {
+        width: 640px;
+        height: 800px;
+        border-radius: 18px;
+        background: #ffffff;
+        color: var(--navy);
+        padding: 44px 50px;
+        box-sizing: border-box;
+        box-shadow: 0 50px 120px rgba(0, 0, 0, 0.5);
+      }
+      .pdf-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .yourlogo {
+        width: 170px;
+        height: 64px;
+        border-radius: 10px;
+        border: 2px dashed #9a9ab0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 17px;
+        font-weight: 700;
+        color: #6b6b85;
+      }
+      .pdf-t {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 800;
+        font-size: 22px;
+        letter-spacing: 0.14em;
+        color: #8a6d2c;
+      }
+      .pdf-title {
+        margin-top: 34px;
+        font-weight: 800;
+        font-size: 44px;
+        line-height: 1.1;
+      }
+      .pdf-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 22px 0;
+        border-bottom: 1.5px solid #e4e4ec;
+        font-weight: 700;
+        font-size: 28px;
+      }
+      .pdf-row i {
+        font-style: normal;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 24px;
+        color: #8a6d2c;
+      }
+      .sig {
+        margin-top: 40px;
+        border: 2px solid var(--gold);
+        border-radius: 12px;
+        padding: 20px 24px;
+        display: flex;
+        justify-content: space-between;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 700;
+        font-size: 22px;
+        color: #55556e;
+      }
+      #prog {
+        position: absolute;
+        left: 150px;
+        right: 150px;
+        top: 1330px;
+        padding: 20px 28px;
+        border-radius: 22px;
+        background: rgba(45, 45, 68, 0.95);
+        border: 2px solid rgba(212, 175, 55, 0.6);
+      }
+      #prog .row {
+        display: flex;
+        justify-content: space-between;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 800;
+        font-size: 28px;
+        letter-spacing: 0.06em;
+      }
+      #prog .bar {
+        margin-top: 16px;
+        height: 10px;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+      }
+      #prog .bar div {
+        height: 100%;
+        background: var(--gold);
+        transform-origin: 0 50%;
+      }
+
+      /* close */
+      #logo {
+        position: absolute;
+        left: 290px;
+        top: 540px;
+        width: 500px;
+        height: auto;
+      }
+      #cta {
+        position: absolute;
+        left: 70px;
+        right: 70px;
+        top: 1000px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      #cta .btn {
+        padding: 30px 64px;
+        border-radius: 999px;
+        background: var(--gold);
+        color: var(--navy);
+        font-weight: 800;
+        font-size: 50px;
+        letter-spacing: 0.02em;
+        box-shadow: 0 20px 50px rgba(212, 175, 55, 0.3);
+      }
+      #cta .url {
+        margin-top: 34px;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 800;
+        font-size: 36px;
+        letter-spacing: 0.04em;
+      }
+      #cta .bring {
+        margin-top: 26px;
+        font-weight: 700;
+        font-size: 30px;
+        letter-spacing: 0.1em;
+        color: var(--tan);
+      }
+      #cta .legal {
+        margin-top: 70px;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 600;
+        font-size: 22px;
+        letter-spacing: 0.08em;
+        color: rgba(255, 255, 255, 0.72);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-width="1080" data-height="1920" data-duration="45.5">
+      <audio id="mix" data-start="0" data-duration="45.5" data-track-index="10" data-volume="1" src="assets/audio/mix.mp3"></audio>
+
+      <div class="layer" id="bg-light"></div>
+      <div class="layer" id="bg-vig"></div>
+
+      <!-- persistent hero: isometric house under a camera -->
+      <div id="cam"><svg id="house" viewBox="-540 -470 1080 900"></svg></div>
+      <svg id="wires" viewBox="0 0 1080 1920"></svg>
+
+      <!-- B1 hook -->
+      <section id="b1" class="layer clip" data-start="0" data-duration="4.3" data-track-index="1">
+        <div class="head" style="top: 150px; height: 120px"><div class="kicker" data-claim="audience"></div></div>
+        <div id="phone">
+          <div class="notch"></div>
+          <div class="app">HOMEESTIMATOR · INTAKE</div>
+          <div id="notif">
+            <div class="av">H</div>
+            <div>
+              <div class="who">Homeowner · now</div>
+              <div class="msg">“What will this addition cost?”</div>
+            </div>
+          </div>
+        </div>
+        <div id="scribble"></div>
+        <div class="head"><div class="h" id="h1">The <span class="gold">first number</span> can cost you the job.</div></div>
+      </section>
+
+      <!-- B2 problem -->
+      <section id="b2" class="layer clip" data-start="3.9" data-duration="6.2" data-track-index="1">
+        <div class="head"><div class="h" id="h2">A range is not a scope.</div></div>
+        <div id="tags"></div>
+        <div id="redline">
+          <div class="bar" id="rl-bar"></div>
+          <div class="half" id="rl-l" style="left: 0"></div>
+          <div class="half" id="rl-r" style="left: 50%"></div>
+          <div class="lbl" style="left: 0" id="rl-a">LEAD PAID</div>
+          <div class="lbl" style="right: 0" id="rl-b">NO PRICE YET</div>
+        </div>
+        <div id="cutter"></div>
+      </section>
+
+      <!-- B3 pivot -->
+      <section id="b3" class="layer clip" data-start="9.9" data-duration="4.6" data-track-index="1">
+        <div class="head"><div class="h" id="h3">Start with what you have.</div></div>
+        <div id="tiles"></div>
+        <div class="sub"><div class="h-sm" id="s3"><span class="gold">5 ways in.</span> 1 source of truth.</div></div>
+      </section>
+
+      <!-- B4 voice hero -->
+      <section id="b4" class="layer clip" data-start="14.3" data-duration="7.85" data-track-index="1">
+        <div class="head"><div class="h" id="h4a">Talk through the project.</div></div>
+        <div class="head"><div class="h" id="h4b">The scope builds as you <span class="gold">speak.</span></div></div>
+        <div class="chip" id="chip-occ" style="left: 690px; top: 700px">OCCUPIED HOME</div>
+        <div id="swatches">
+          <div class="swatch" id="sw1" style="left: 110px; top: 1130px; background: #3a3a55"></div>
+          <div class="swatch" id="sw2" style="left: 110px; top: 1030px; background: #8f7f60"></div>
+          <div class="swatch" id="sw3" style="left: 110px; top: 930px; background: #c9a96e"></div>
+        </div>
+        <div id="voice">
+          <div id="wave"></div>
+          <div id="transcript">
+            <span id="tx1">“Second-floor addition.</span><span id="tx2" class="gold">Cape.</span><span id="tx3">Occupied home.</span><span id="tx4" class="gold">Better finish tier.”</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- B5 dependencies -->
+      <section id="b5" class="layer clip" data-start="22.0" data-duration="7.9" data-track-index="1">
+        <div class="head" style="top: 190px; height: 250px"><div class="h" id="h5">The work one decision drags along.</div></div>
+        <div id="dep-chipwrap">
+          <div class="sel" id="sel-a">WALL INSULATION</div>
+        </div>
+        <div id="dep-chipwrap2" style="position: absolute; left: 0; right: 0; top: 470px; display: flex; justify-content: center">
+          <div class="sel" id="sel-b">GUT-TO-STUDS</div>
+        </div>
+        <div id="items">
+          <div class="item" id="it1"><b>01</b>Wall insulation</div>
+          <div class="item" id="it2"><b>+</b>Drywall <span class="gold">→</span> Paint</div>
+        </div>
+        <svg id="wall" viewBox="0 0 600 460"></svg>
+        <div id="nodes"></div>
+        <div id="stats">
+          <div class="stat" id="st1"><div class="n"><span id="n-cards">0</span></div><div class="l">SCOPE CARDS</div></div>
+          <div class="stat" id="st2"><div class="n"><span id="n-rules">0</span></div><div class="l">SERVER-SIDE DEPENDENCY RULES</div></div>
+        </div>
+      </section>
+
+      <!-- B6 price logic -->
+      <section id="b6" class="layer clip" data-start="29.7" data-duration="5.8" data-track-index="1">
+        <div class="head"><div class="h" id="h6a">Your price book.</div></div>
+        <div class="head"><div class="h" id="h6b">Your margin. <span class="gold">Protected.</span></div></div>
+        <div id="tiers">
+          <div class="slab" id="sl1"><div class="sw" style="background: #4a4a66"></div><div class="sn">ENTRY</div></div>
+          <div class="slab" id="sl2"><div class="sw" style="background: #7d7d96"></div><div class="sn">GOOD</div></div>
+          <div class="slab" id="sl3"><div class="sw" style="background: #c9a96e"></div><div class="sn">BETTER</div></div>
+          <div class="slab" id="sl4"><div class="sw" style="background: #d4af37"></div><div class="sn">BEST</div></div>
+        </div>
+        <div id="slab-hl"></div>
+        <div id="total"><span class="lbl">ESTIMATE TOTAL</span><span class="v" id="tot">$168,400</span></div>
+        <div id="ledger">
+          <div class="lr"><span>COMPANY PRICE BOOK</span><span class="ok">APPLIED ✓</span></div>
+          <div class="lr"><span>OVERHEAD</span><div class="track"><div class="fill" style="width: 60%"></div></div></div>
+          <div class="lr"><span>WASTAGE</span><div class="track"><div class="fill" style="width: 38%"></div></div></div>
+          <div class="lr">
+            <span style="display: flex; align-items: center">
+              <svg id="lock" viewBox="0 0 40 40"><rect x="7" y="18" width="26" height="19" rx="4" fill="#d4af37" /><path id="shackle" d="M13 18 V12 a7 7 0 0 1 14 0 V18" fill="none" stroke="#d4af37" stroke-width="4" /></svg>NET PROFIT
+            </span>
+            <div class="track" id="np-track"><div class="fill" id="np-fill" style="width: 100%; background: #d4af37"></div><div id="np-floor"></div><div id="np-handle"></div></div>
+          </div>
+        </div>
+        <div id="toast">
+          <svg viewBox="0 0 40 40" style="width: 34px; height: 34px"><rect x="7" y="18" width="26" height="19" rx="4" fill="#1a1a2e" /><path d="M13 18 V12 a7 7 0 0 1 14 0 V18" fill="none" stroke="#1a1a2e" stroke-width="4" /></svg>
+          AUTHORIZED CONTROL REQUIRED
+        </div>
+        <svg id="cursor" viewBox="0 0 56 56"><path d="M8 4 L8 44 L19 34 L27 52 L34 49 L26 31 L42 31 Z" fill="#d9534f" stroke="#ffffff" stroke-width="3" stroke-linejoin="round" /></svg>
+      </section>
+
+      <!-- B7 proof -->
+      <section id="b7" class="layer clip" data-start="35.4" data-duration="3.7" data-track-index="1">
+        <div class="head" style="top: 190px"><div class="h" id="h7">From conversation to <span class="gold">branded proposal.</span></div></div>
+        <div id="pdf-wrap">
+          <div id="pdf">
+            <div class="pdf-head"><div class="yourlogo">YOUR LOGO</div><div class="pdf-t">PROPOSAL</div></div>
+            <div class="pdf-title">Second-floor addition · Cape</div>
+            <div style="height: 20px"></div>
+            <div class="pdf-row"><span>Scope</span><i>✓ 24 items</i></div>
+            <div class="pdf-row"><span>Allowances</span><i>✓</i></div>
+            <div class="pdf-row"><span>Options</span><i>✓ Better tier</i></div>
+            <div class="pdf-row"><span>Payment schedule</span><i>✓</i></div>
+            <div class="sig"><span>E-SIGNATURE</span><span>SIGN HERE ✍</span></div>
+          </div>
+        </div>
+        <div id="prog">
+          <div class="row"><span data-claim="output"></span><span class="gold" data-claim="outputTime"></span></div>
+          <div class="bar"><div id="prog-fill"></div></div>
+        </div>
+      </section>
+
+      <!-- B8 close -->
+      <section id="b8" class="layer clip" data-start="38.9" data-duration="6.6" data-track-index="1">
+        <div class="head"><div class="h" id="h8">Price the real job. <span class="gold">Before the plans.</span></div></div>
+        <img id="logo" src="assets/logo-full.png" alt="HomeEstimator logo" />
+        <div id="cta">
+          <div class="btn" data-claim="cta"></div>
+          <div class="url" data-claim="url"></div>
+          <div class="bring" data-claim="bring"></div>
+          <div class="legal" data-claim="guarantee"></div>
+        </div>
+      </section>
+
+    </div>
+
+    <script>
+      (function () {
+        // ---- claims: marketing can edit here without touching scene code ----
+        const CLAIMS = {
+          audience: "GENERAL CONTRACTORS · REMODELERS · CUSTOM HOME BUILDERS",
+          inputs: ["PLANS", "VOICE", "TYPED SCOPE", "RECORDING", "GUIDED QUESTIONS"],
+          scopeCards: 50,
+          scopeCardsSuffix: "+",
+          dependencyRules: 256,
+          outputTime: "~10 MIN",
+          output: "SCOPE → SIGNABLE PDF",
+          guarantee: "7-DAY MONEY-BACK GUARANTEE ON ALL PLANS",
+          cta: "BOOK A LIVE DEMO",
+          url: "HOMEESTIMATOR.AI/BOOK-DEMO",
+          bring: "BRING A REAL U.S. PROJECT",
+        };
+        document.querySelectorAll("[data-claim]").forEach((el) => (el.textContent = CLAIMS[el.dataset.claim]));
+
+        let seed = 42;
+        const rnd = () => ((seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296);
+        const NS = "http://www.w3.org/2000/svg";
+        const mk = (tag, attrs, parent) => {
+          const e = document.createElementNS(NS, tag);
+          for (const k in attrs) e.setAttribute(k, attrs[k]);
+          if (parent) parent.appendChild(e);
+          return e;
+        };
+
+        // ---- isometric house ----
+        const house = document.getElementById("house");
+        const CX = 180, CY = 130, ZOFF = -40;
+        const iso = (x, y, z) => [((x - CX) - (y - CY)) * 0.866, ((x - CX) + (y - CY)) * 0.5 - z + ZOFF + 140];
+        const pts = (arr) => arr.map((p) => iso(...p).map((v) => v.toFixed(1)).join(",")).join(" ");
+        const poly = (g, arr, fill, cls) => mk("polygon", { points: pts(arr), fill: fill, class: cls || "edge", "stroke-linejoin": "round" }, g);
+        const face = (g, arr, fill) => {
+          const p = mk("polygon", { points: pts(arr), fill: fill }, g);
+          p.setAttribute("stroke", "rgba(255,255,255,0.7)");
+          p.setAttribute("stroke-width", "2");
+          p.setAttribute("stroke-linejoin", "round");
+          return p;
+        };
+        const box = (g, x0, x1, y0, y1, z0, z1, tint) => {
+          const fs = [
+            face(g, [[x0, y1, z0], [x1, y1, z0], [x1, y1, z1], [x0, y1, z1]], tint ? "#3a3650" : "#2d2d44"),
+            face(g, [[x1, y0, z0], [x1, y1, z0], [x1, y1, z1], [x1, y0, z1]], tint ? "#302c45" : "#24243b"),
+            face(g, [[x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]], "#34344f"),
+          ];
+          return fs;
+        };
+        const win = (g, x, y1, z, w, h) => face(g, [[x, y1, z], [x + w, y1, z], [x + w, y1, z + h], [x, y1, z + h]], "rgba(201,169,110,0.35)");
+        const winX = (g, x1, y, z, w, h) => face(g, [[x1, y, z], [x1, y + w, z], [x1, y + w, z + h], [x1, y, z + h]], "rgba(201,169,110,0.3)");
+
+        const G = {};
+        ["plan", "found", "f1", "f2", "roof", "marks", "engine"].forEach((id) => (G[id] = mk("g", { id: "g-" + id }, house)));
+        // plan footprint (dashed plan lines + interior walls)
+        mk("polygon", { points: pts([[0, 0, 0], [360, 0, 0], [360, 260, 0], [0, 260, 0]]), class: "plan", id: "plan-out" }, G.plan);
+        mk("polyline", { points: pts([[150, 0, 0], [150, 260, 0]]), class: "plan" }, G.plan);
+        mk("polyline", { points: pts([[150, 140, 0], [360, 140, 0]]), class: "plan" }, G.plan);
+        // foundation slab
+        box(G.found, -10, 370, -10, 270, -22, 0);
+        G.found.querySelectorAll("polygon").forEach((p) => p.setAttribute("stroke", "rgba(201,169,110,0.8)"));
+        // ground floor
+        const f1faces = box(G.f1, 0, 360, 0, 260, 0, 150);
+        win(G.f1, 40, 260, 40, 70, 70); win(G.f1, 150, 260, 0, 60, 110); win(G.f1, 250, 260, 40, 70, 70);
+        winX(G.f1, 360, 50, 40, 70, 70); winX(G.f1, 360, 150, 40, 70, 70);
+        // second floor (the addition)
+        const f2faces = box(G.f2, 0, 360, 0, 260, 150, 270, false);
+        win(G.f2, 50, 260, 185, 60, 60); win(G.f2, 250, 260, 185, 60, 60); winX(G.f2, 360, 100, 185, 60, 60);
+        // cape gable roof with dormers
+        const R0 = 270, RH = 120, YM = 130;
+        face(G.roof, [[-12, -12, R0], [372, -12, R0], [372, YM, R0 + RH], [-12, YM, R0 + RH]], "#26263d");
+        face(G.roof, [[-12, 272, R0], [372, 272, R0], [372, YM, R0 + RH], [-12, YM, R0 + RH]], "#34344f");
+        face(G.roof, [[372, -12, R0], [372, 272, R0], [372, YM, R0 + RH]], "#2a2a42");
+        [70, 230].forEach((dx) => {
+          face(G.roof, [[dx, 215, R0 + 25], [dx + 60, 215, R0 + 25], [dx + 60, 215, R0 + 75], [dx + 30, 215, R0 + 100], [dx, 215, R0 + 75]], "#2d2d44");
+          win(G.roof, dx + 15, 215, R0 + 35, 30, 34);
+        });
+        G.roof.querySelectorAll("polygon").forEach((p) => p.setAttribute("stroke", "rgba(212,175,55,0.9)"));
+        // red warning markers on the incomplete footprint
+        const markPts = [[40, 260, 60], [300, 260, 90], [360, 60, 110], [200, 260, 10], [360, 200, 40]];
+        const marks = markPts.map(([x, y, z]) => {
+          const [px, py] = iso(x, y, z);
+          const g = mk("g", { transform: `translate(${px.toFixed(1)} ${py.toFixed(1)})` }, G.marks);
+          const inner = mk("g", {}, g);
+          mk("path", { d: "M0 -22 L20 14 L-20 14 Z", fill: "#d9534f", stroke: "#fff", "stroke-width": 2 }, inner);
+          mk("rect", { x: -2, y: -9, width: 4, height: 12, fill: "#fff" }, inner);
+          mk("rect", { x: -2, y: 6, width: 4, height: 4, fill: "#fff" }, inner);
+          return inner;
+        });
+        // scope engine node (house centre, above roof)
+        const [ex, ey] = iso(180, 130, 430);
+        const eng = mk("g", { transform: `translate(${ex} ${ey})` }, G.engine);
+        const engInner = mk("g", {}, eng);
+        mk("circle", { r: 34, fill: "#d4af37" }, engInner);
+        mk("circle", { r: 54, fill: "none", stroke: "#d4af37", "stroke-width": 3, opacity: 0.6 }, engInner);
+        // screen position of engine node (cam top 470, svg viewBox offset -540,-470)
+        const ENG = { x: 540 + ex, y: 470 + 470 + ey };
+
+        // ---- scribble estimate (split into glyphs for the fracture) ----
+        const scr = document.getElementById("scribble");
+        "Probably around $325K".split("").forEach((ch) => {
+          const s = document.createElement("span");
+          s.textContent = ch === " " ? " " : ch;
+          scr.appendChild(s);
+        });
+        const glyphs = [...scr.children];
+
+        // ---- scope tags ----
+        const tagText = ["HVAC?", "Wall finishes?", "Occupied home?", "Mechanical work?", "Allowances?"];
+        const tagPos = [[90, 560], [640, 610], [70, 1180], [600, 1240], [330, 1250]];
+        const tags = tagText.map((t, i) => {
+          const d = document.createElement("div");
+          d.className = "tag";
+          d.textContent = t;
+          d.style.left = tagPos[i][0] + "px";
+          d.style.top = tagPos[i][1] + "px";
+          document.getElementById("tags").appendChild(d);
+          return d;
+        });
+
+        // ---- input tiles on an arc around the house ----
+        const icons = {
+          PLANS: '<rect x="8" y="6" width="34" height="38" rx="3" fill="none" stroke="#d4af37" stroke-width="3"/><path d="M14 16h22M14 24h22M14 32h14" stroke="#fff" stroke-width="3"/>',
+          VOICE: '<rect x="18" y="6" width="14" height="24" rx="7" fill="#d4af37"/><path d="M11 24a14 14 0 0 0 28 0M25 38v6" fill="none" stroke="#fff" stroke-width="3"/>',
+          "TYPED SCOPE": '<rect x="5" y="12" width="40" height="26" rx="4" fill="none" stroke="#d4af37" stroke-width="3"/><path d="M11 20h4M19 20h4M27 20h4M35 20h4M13 30h24" stroke="#fff" stroke-width="3"/>',
+          RECORDING: '<circle cx="25" cy="25" r="18" fill="none" stroke="#fff" stroke-width="3"/><circle cx="25" cy="25" r="9" fill="#d4af37"/>',
+          "GUIDED QUESTIONS": '<path d="M8 10h34v22H24l-9 8v-8H8z" fill="none" stroke="#d4af37" stroke-width="3" stroke-linejoin="round"/><path d="M21 17a4 4 0 1 1 5 4v3M25.5 28v1" stroke="#fff" stroke-width="3" fill="none"/>',
+        };
+        const tileWrap = document.getElementById("tiles");
+        const R = 395, C = { x: 540, y: 1000 };
+        const tiles = CLAIMS.inputs.map((name, i) => {
+          const a = (200 + i * 35) * (Math.PI / 180);
+          const x = C.x + Math.cos(a) * R, y = C.y + Math.sin(a) * R * 0.95;
+          const d = document.createElement("div");
+          d.className = "tile";
+          d.style.left = x.toFixed(0) + "px";
+          d.style.top = y.toFixed(0) + "px";
+          d.innerHTML = '<svg viewBox="0 0 50 50">' + icons[name] + '</svg><div class="tl">' + name + "</div>";
+          tileWrap.appendChild(d);
+          return { el: d, x, y };
+        });
+        const wires = document.getElementById("wires");
+        const wireEls = tiles.map((t) =>
+          mk("path", { d: `M${t.x.toFixed(0)} ${(t.y + 60).toFixed(0)} Q ${((t.x + ENG.x) / 2).toFixed(0)} ${(ENG.y - 40).toFixed(0)} ${ENG.x.toFixed(0)} ${ENG.y.toFixed(0)}`, fill: "none", stroke: "#d4af37", "stroke-width": 4, pathLength: 100, "stroke-dasharray": "100 100", "stroke-dashoffset": 100, "stroke-linecap": "round" }, wires)
+        );
+
+        // ---- waveform ----
+        const wave = document.getElementById("wave");
+        const bars = [];
+        for (let i = 0; i < 64; i++) {
+          const b = document.createElement("i");
+          wave.appendChild(b);
+          bars.push(b);
+        }
+
+        // ---- cutaway wall ----
+        const wall = document.getElementById("wall");
+        const W = { studs: mk("g", {}, wall), ins: mk("g", {}, wall), dry: mk("g", {}, wall), paint: mk("g", {}, wall) };
+        mk("rect", { x: 0, y: 0, width: 600, height: 460, rx: 14, fill: "#222238", stroke: "rgba(255,255,255,0.5)", "stroke-width": 2 }, W.studs);
+        for (let x = 30; x < 600; x += 90) mk("rect", { x: x, y: 10, width: 22, height: 440, fill: "#8f7f60" }, W.studs);
+        mk("rect", { x: 10, y: 10, width: 580, height: 20, fill: "#8f7f60" }, W.studs);
+        mk("rect", { x: 10, y: 430, width: 580, height: 20, fill: "#8f7f60" }, W.studs);
+        mk("path", { d: "M52 120 H 560", stroke: "#ffffff", "stroke-width": 4, fill: "none" }, W.studs); // electrical run
+        mk("path", { d: "M52 330 H 560", stroke: "#c9a96e", "stroke-width": 8, fill: "none" }, W.studs); // plumbing
+        mk("rect", { x: 380, y: 200, width: 150, height: 70, rx: 8, fill: "none", stroke: "#d4af37", "stroke-width": 4 }, W.studs); // duct
+        for (let x = 52; x < 580; x += 90) mk("rect", { x: x, y: 30, width: 68, height: 400, fill: "rgba(201,169,110,0.35)" }, W.ins);
+        mk("rect", { x: 0, y: 0, width: 600, height: 460, rx: 14, fill: "#3a3a55", stroke: "rgba(255,255,255,0.5)", "stroke-width": 2 }, W.dry);
+        mk("rect", { x: 0, y: 0, width: 600, height: 460, rx: 14, fill: "#e9e4d6" }, W.paint);
+
+        const nodeNames = ["FRAMING", "ELECTRICAL", "PLUMBING", "HVAC", "INSULATION", "FINISHES"];
+        const WC = { x: 540, y: 1010 };
+        const nodeWrap = document.getElementById("nodes");
+        const depSvg = mk("svg", { viewBox: "0 0 1080 1920", style: "position:absolute;left:0;top:0;width:1080px;height:1920px" });
+        nodeWrap.appendChild(depSvg);
+        const nodes = nodeNames.map((nm, i) => {
+          const a = (-90 + i * 60) * (Math.PI / 180);
+          const x = WC.x + Math.cos(a) * 400, y = WC.y + Math.sin(a) * 265;
+          const line = mk("line", { x1: WC.x, y1: WC.y, x2: x.toFixed(0), y2: y.toFixed(0), stroke: "#d4af37", "stroke-width": 3, pathLength: 100, "stroke-dasharray": "100 100", "stroke-dashoffset": 100 }, depSvg);
+          const d = document.createElement("div");
+          d.className = "node";
+          d.textContent = nm;
+          d.style.left = x.toFixed(0) + "px";
+          d.style.top = y.toFixed(0) + "px";
+          nodeWrap.appendChild(d);
+          return { el: d, line };
+        });
+
+        // ================= timeline =================
+        const tl = gsap.timeline({ paused: true });
+        const snap = "back.out(1.8)", out = "power3.out", expo = "expo.out";
+        const swapHead = (a, b, t) => {
+          tl.to(a, { opacity: 0, y: -40, duration: 0.2, ease: "power2.in" }, t - 0.2);
+          tl.fromTo(b, { opacity: 0, y: 50, scale: 1.06 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: snap }, t);
+        };
+
+        // camera + house initial state
+        tl.set(["#g-found", "#g-f1", "#g-f2", "#g-roof", "#g-marks", "#g-engine"], { opacity: 0 }, 0);
+        tl.fromTo("#cam", { scale: 0.7, y: 40, rotationY: 0, rotationX: 0, transformPerspective: 1800 }, { scale: 0.8, y: 20, duration: 4.3, ease: "power1.out" }, 0);
+        tl.fromTo("#plan-out", { opacity: 0.25 }, { opacity: 1, duration: 1.2 }, 1.4);
+
+        // ---- B1 hook (0 – 4.3) ----
+        tl.fromTo("#b1 .kicker", { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5, ease: out }, 0.1);
+        tl.fromTo("#phone", { opacity: 0, y: 80, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: expo }, 0);
+        tl.fromTo("#notif", { opacity: 0, y: -40, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: snap }, 0.08); // sfx: notification
+        tl.to("#phone", { scale: 4.2, opacity: 0, duration: 0.55, ease: "power3.in" }, 1.35); // camera pushes through the glass
+        tl.to("#b1 .kicker", { opacity: 0, duration: 0.3 }, 1.4);
+        tl.to("#cam", { scale: 1.02, duration: 0.6, ease: out }, 1.75);
+        glyphs.forEach((g, i) => tl.fromTo(g, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.12, ease: "none" }, 1.85 + i * 0.03));
+        tl.fromTo("#h1", { opacity: 0, y: 60, scale: 1.1 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: snap }, 2.6); // beat-locked 2.62 (impact)
+        glyphs.forEach((g, i) => {
+          const dx = (rnd() - 0.5) * 900, dy = 260 + rnd() * 520, r = (rnd() - 0.5) * 220;
+          tl.to(g, { x: dx, y: dy, rotation: r, opacity: 0, duration: 0.9, ease: "power3.in" }, 3.3 + rnd() * 0.08);
+        });
+        tl.to("#h1", { opacity: 0, y: -40, duration: 0.2, ease: "power2.in" }, 4.1);
+
+        // ---- B2 problem (3.9 – 10.1) ----
+        tl.fromTo("#h2", { opacity: 0, y: 50, scale: 1.06 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: snap }, 4.3);
+        tl.to("#g-found", { opacity: 0.55, duration: 0.4 }, 4.2);
+        tags.forEach((t, i) => {
+          const at = 4.3 + i * 0.62; // beat-grid
+          const [mx, my] = iso(...markPts[i]);
+          const tx = 540 + mx - tagPos[i][0] - 60, ty = 470 + 470 + my - tagPos[i][1] - 30;
+          tl.fromTo(t, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.3, ease: snap }, at);
+          tl.to(t, { x: tx * 0.8, y: ty * 0.8, scale: 0.4, opacity: 0, duration: 0.9, ease: "power2.in" }, at + 0.9);
+          tl.fromTo(marks[i], { scale: 0 }, { scale: 1, duration: 0.3, ease: snap, transformOrigin: "50% 50%" }, at + 1.65);
+        });
+        tl.set("#g-marks", { opacity: 1 }, 4.2);
+        tl.to("#cam", { scale: 0.86, y: 30, duration: 2.6, ease: "sine.inOut" }, 5.4); // pull back: footprint is incomplete
+        tl.fromTo("#redline", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 6.9);
+        tl.set(["#rl-l", "#rl-r"], { opacity: 0 }, 0);
+        tl.fromTo("#rl-bar", { scaleX: 0 }, { scaleX: 1, duration: 1.1, ease: "power2.inOut" }, 6.95);
+        tl.fromTo("#rl-a", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 6.9);
+        tl.fromTo("#rl-b", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 7.9);
+        // natural music silence 9.1–9.9: everything dims (low-pass moment)
+        tl.to(["#b2", "#cam"], { opacity: 0.45, duration: 0.3, ease: "power1.out" }, 9.05);
+        // beat-locked 9.92 drop: gold cut through the red line
+        tl.set("#cutter", { opacity: 0 }, 0);
+        tl.fromTo("#cutter", { opacity: 1, scaleY: 0 }, { scaleY: 1, duration: 0.12, ease: "power4.out", immediateRender: false }, 9.86);
+        tl.to(["#b2", "#cam"], { opacity: 1, duration: 0.1 }, 9.9);
+        tl.set("#rl-bar", { opacity: 0 }, 9.92);
+        tl.set(["#rl-l", "#rl-r"], { opacity: 1 }, 9.92);
+        tl.to("#rl-l", { x: -120, y: 260, rotation: -18, opacity: 0, duration: 0.6, ease: "power2.in" }, 9.95);
+        tl.to("#rl-r", { x: 120, y: 260, rotation: 18, opacity: 0, duration: 0.6, ease: "power2.in" }, 9.95);
+        tl.to(["#rl-a", "#rl-b", "#h2"], { opacity: 0, duration: 0.2 }, 9.92);
+        tl.to("#cutter", { opacity: 0, duration: 0.35 }, 10.0);
+        marks.forEach((m, i) => tl.to(m, { scale: 0, duration: 0.2, ease: "power2.in", transformOrigin: "50% 50%" }, 9.95 + i * 0.03));
+
+        // ---- B3 pivot (9.9 – 14.5) ----
+        tl.fromTo("#h3", { opacity: 0, y: 50, scale: 1.06 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: snap }, 10.0);
+        tl.to("#cam", { scale: 0.72, y: 80, duration: 0.7, ease: expo }, 9.95);
+        tl.to("#g-f1", { opacity: 0.6, duration: 0.5 }, 10.1);
+        tiles.forEach((t, i) => tl.fromTo(t.el, { opacity: 0, scale: 0.4, y: 60 }, { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: snap }, 10.1 + i * 0.62)); // beat-grid: clicks
+        wireEls.forEach((w, i) => tl.fromTo(w, { strokeDashoffset: 100 }, { strokeDashoffset: 0, duration: 0.5, ease: "power2.inOut" }, 12.7 + i * 0.04));
+        tl.fromTo("#g-engine", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 12.95);
+        tl.fromTo(engInner, { scale: 0.2 }, { scale: 1, duration: 0.5, ease: "back.out(3)", transformOrigin: "50% 50%" }, 12.95);
+        tl.fromTo("#s3", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4, ease: out }, 12.95);
+        tl.fromTo("#cam", { rotationY: -14 }, { rotationY: 10, duration: 4.2, ease: "sine.inOut", immediateRender: false }, 10.0); // controlled orbit
+        tl.to(wireEls, { opacity: 0, duration: 0.3 }, 14.1);
+        tiles.forEach((t, i) => {
+          if (i === 1) return;
+          tl.to(t.el, { opacity: 0, scale: 0.5, duration: 0.3, ease: "power2.in" }, 14.05);
+        });
+        tl.to(tiles[1].el, { x: 540 - tiles[1].x, y: 1400 - tiles[1].y, scale: 0.6, opacity: 0, duration: 0.45, ease: "power3.in" }, 14.05); // voice tile becomes the voice panel
+        tl.to(["#h3", "#s3"], { opacity: 0, duration: 0.2 }, 14.1);
+
+        // ---- B4 voice hero (14.3 – 22.15) ----
+        tl.fromTo("#h4a", { opacity: 0, y: 50, scale: 1.06 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: snap }, 14.45);
+        tl.fromTo("#voice", { opacity: 0, scaleY: 0.3 }, { opacity: 1, scaleY: 1, duration: 0.45, ease: expo }, 14.45);
+        tl.to("#g-f1", { opacity: 1, duration: 0.3 }, 14.5);
+        tl.to("#g-engine", { opacity: 0, duration: 0.3 }, 14.4);
+        tl.to("#cam", { scale: 0.8, y: -10, rotationY: 0, duration: 1.0, ease: out }, 14.45);
+        bars.forEach((b, i) => tl.set(b, { scaleY: 0.08 }, 0));
+        // waveform pulses with the beat (deterministic)
+        const B4B = [14.68, 15.3, 15.91, 16.53, 17.16, 17.76, 18.39, 19.02, 19.64, 20.25, 20.87, 21.48];
+        B4B.forEach((bt, k) => {
+          bars.forEach((b, i) => {
+            const env = Math.sin((i / 63) * Math.PI);
+            const v = 0.12 + env * (0.35 + rnd() * 0.6);
+            tl.to(b, { scaleY: v, duration: 0.14, ease: "power2.out" }, bt);
+            tl.to(b, { scaleY: v * 0.35, duration: 0.45, ease: "power1.in" }, bt + 0.14);
+          });
+        });
+        [["#tx1", 15.0], ["#tx2", 16.4], ["#tx3", 17.4], ["#tx4", 18.6]].forEach(([s, t]) => tl.fromTo(s, { opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.45, ease: "power2.out" }, t));
+        // house assembles as each phrase lands
+        tl.fromTo("#g-f2", { opacity: 0, y: 120 }, { opacity: 1, y: 0, duration: 0.6, ease: "back.out(1.4)" }, 15.3);
+        tl.fromTo("#g-roof", { opacity: 0, y: -160 }, { opacity: 1, y: 0, duration: 0.55, ease: "back.out(1.6)" }, 16.65);
+        tl.fromTo("#chip-occ", { opacity: 0, scale: 0.5, x: 40 }, { opacity: 1, scale: 1, x: 0, duration: 0.4, ease: snap }, 17.65);
+        tl.fromTo("#sw1", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.3, ease: snap }, 18.7);
+        tl.fromTo("#sw2", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.3, ease: snap }, 18.78);
+        tl.fromTo("#sw3", { opacity: 0, x: -60, scale: 1 }, { opacity: 1, x: 0, scale: 1.18, duration: 0.35, ease: snap }, 18.86);
+        tl.to([...f1faces.slice(0, 2), ...f2faces.slice(0, 2)], { attr: { fill: "#4a4458" }, duration: 0.25 }, 18.85); // better finish tier
+        swapHead("#h4a", "#h4b", 19.7);
+        tl.to("#cam", { scale: 0.86, duration: 2.0, ease: "sine.inOut" }, 19.7);
+        tl.to(["#h4b", "#voice", "#chip-occ", "#swatches"], { opacity: 0, duration: 0.2 }, 21.85);
+
+        // ---- B5 dependencies (22.0 – 29.9) ----
+        tl.to("#cam", { scale: 3.2, y: 260, x: -120, opacity: 0, duration: 0.45, ease: "power3.in" }, 21.9); // camera dives into the wall
+        tl.fromTo("#wall", { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: 0.5, ease: expo }, 22.2);
+        tl.fromTo("#h5", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.45, ease: snap }, 22.2);
+        tl.fromTo("#sel-a", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.3, ease: snap }, 22.35);
+        tl.fromTo("#it1", { opacity: 0, x: -80 }, { opacity: 1, x: 0, duration: 0.35, ease: snap }, 22.5);
+        tl.fromTo("#it2", { opacity: 0, x: -80 }, { opacity: 1, x: 0, duration: 0.35, ease: snap }, 23.25);
+        tl.fromTo(W.paint, { opacity: 1 }, { opacity: 0, duration: 0.3, immediateRender: false }, 23.3);
+        tl.set("#sel-b", { opacity: 0 }, 0);
+        tl.to("#sel-a", { opacity: 0, scale: 0.8, duration: 0.15 }, 24.75);
+        tl.fromTo("#sel-b", { opacity: 0, scale: 1.3 }, { opacity: 1, scale: 1, duration: 0.3, ease: snap, immediateRender: false }, 24.85);
+        tl.to("#items", { opacity: 0, y: -30, duration: 0.25 }, 24.8);
+        tl.to(W.dry, { x: 640, duration: 0.45, ease: "power3.in" }, 24.85); // gut to studs
+        tl.to(W.ins, { opacity: 0.25, duration: 0.3 }, 25.0);
+        nodes.forEach((n, i) => {
+          const at = 25.15 + i * 0.31; // half-beat grid
+          tl.fromTo(n.line, { strokeDashoffset: 100 }, { strokeDashoffset: 0, duration: 0.3, ease: "power2.out" }, at);
+          tl.fromTo(n.el, { opacity: 0, scale: 0.4, z: -200 }, { opacity: 1, scale: 1, z: 0, duration: 0.35, ease: snap }, at + 0.12);
+        });
+        tl.fromTo("#stats", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 26.8);
+        tl.fromTo("#st1", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4, ease: snap }, 26.8);
+        tl.fromTo("#st2", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4, ease: snap }, 27.4);
+        const cnt = { a: 0, b: 0 };
+        tl.to(cnt, { a: CLAIMS.scopeCards, duration: 0.9, ease: "power2.out", onUpdate: () => (document.getElementById("n-cards").textContent = Math.round(cnt.a) + (cnt.a >= CLAIMS.scopeCards ? CLAIMS.scopeCardsSuffix : "")) }, 26.85);
+        tl.to(cnt, { b: CLAIMS.dependencyRules, duration: 1.0, ease: "power2.out", onUpdate: () => (document.getElementById("n-rules").textContent = Math.round(cnt.b)) }, 27.45);
+        tl.to("#b5 > *", { opacity: 0, scale: 0.92, duration: 0.25, ease: "power2.in" }, 29.5);
+
+        // ---- B6 price logic (29.7 – 35.5) ----
+        // beat-locked 29.73 hit
+        tl.fromTo("#h6a", { opacity: 0, y: 50, scale: 1.06 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: snap }, 29.75);
+        ["#sl1", "#sl2", "#sl3", "#sl4"].forEach((s, i) => tl.fromTo(s, { opacity: 0, rotationX: 70, y: 80 }, { opacity: 1, rotationX: 0, y: 0, duration: 0.45, ease: snap }, 29.75 + i * 0.07));
+        tl.fromTo("#slab-hl", { opacity: 0, x: 0 }, { opacity: 1, x: 0, duration: 0.2 }, 30.1);
+        tl.fromTo("#total", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 30.0);
+        tl.fromTo("#ledger", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.45, ease: snap }, 30.1);
+        const step = 234;
+        const tot = { v: 168400 };
+        const fmt = () => (document.getElementById("tot").textContent = "$" + (Math.round(tot.v / 100) * 100).toLocaleString("en-US"));
+        tl.to("#slab-hl", { x: step, duration: 0.22, ease: "power3.out" }, 30.4);
+        tl.to(tot, { v: 191200, duration: 0.35, ease: "power2.out", onUpdate: fmt }, 30.4);
+        tl.to("#slab-hl", { x: step * 2, duration: 0.22, ease: "power3.out" }, 31.02);
+        tl.to(tot, { v: 214900, duration: 0.35, ease: "power2.out", onUpdate: fmt }, 31.02);
+        tl.to("#sl3", { y: -14, duration: 0.2, ease: "power2.out" }, 31.02);
+        // red cursor tries to drag NET PROFIT below the floor; the floor holds
+        tl.fromTo("#cursor", { opacity: 0, x: 900, y: 1500 }, { opacity: 1, x: 720, y: 1250, duration: 0.5, ease: "power2.out" }, 31.9);
+        tl.to("#cursor", { x: 668, y: 1188, duration: 0.35, ease: "power2.inOut" }, 32.4);
+        tl.to("#cursor", { x: 520, duration: 0.4, ease: "power1.in" }, 32.75);
+        tl.to("#np-handle", { x: -150, duration: 0.4, ease: "power1.in" }, 32.75);
+        tl.to("#np-fill", { scaleX: 0.55, duration: 0.4, ease: "power1.in" }, 32.75);
+        tl.to("#np-handle", { x: -92, duration: 0.3, ease: "back.out(3)" }, 33.15); // margin-lock
+        tl.to("#np-fill", { scaleX: 0.7, duration: 0.3, ease: "back.out(3)" }, 33.15);
+        tl.to("#cursor", { x: 580, duration: 0.3, ease: "back.out(3)" }, 33.15);
+        tl.fromTo("#shackle", { y: -6 }, { y: 0, duration: 0.15, ease: "power4.in" }, 33.1);
+        tl.fromTo("#lock", { scale: 1 }, { scale: 1.35, duration: 0.15, yoyo: true, repeat: 1, ease: "power2.out" }, 33.15);
+        tl.fromTo("#toast", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: snap }, 33.2);
+        tl.to("#cursor", { opacity: 0, duration: 0.3 }, 33.9);
+        swapHead("#h6a", "#h6b", 33.35);
+        tl.to("#b6 > *", { opacity: 0, scale: 0.9, duration: 0.25, ease: "power2.in" }, 35.2);
+
+        // ---- B7 proof (35.4 – 39.1) ----
+        tl.fromTo("#pdf", { rotationY: -90, opacity: 0, scale: 0.8 }, { rotationY: 0, opacity: 1, scale: 1, duration: 0.6, ease: snap }, 35.45);
+        tl.fromTo("#h7", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.45, ease: snap }, 35.5);
+        tl.fromTo("#prog", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4, ease: snap }, 36.1);
+        tl.fromTo("#prog-fill", { scaleX: 0 }, { scaleX: 1, duration: 1.2, ease: "power2.inOut" }, 36.2);
+        tl.to("#pdf", { rotationY: 8, duration: 2.4, ease: "sine.inOut" }, 36.1);
+        tl.to("#b7 > *", { opacity: 0, scale: 0.9, duration: 0.25, ease: "power2.in" }, 38.7);
+
+        // ---- B8 close (38.9 – 43) ----
+        tl.set("#cam", { x: 0, y: 40, rotationY: 0 }, 38.85);
+        tl.fromTo("#cam", { opacity: 0, scale: 0.55 }, { opacity: 1, scale: 0.72, duration: 0.5, ease: expo, immediateRender: false }, 38.9);
+        tl.set(["#g-f1", "#g-f2", "#g-roof", "#g-found"], { opacity: 1 }, 38.9);
+        tl.set("#g-marks", { opacity: 0 }, 38.9);
+        tl.to("#house .edge, #house polygon", { attr: { stroke: "#d4af37" }, duration: 0.3 }, 39.05); // completed model glows gold
+        tl.fromTo("#h8", { opacity: 0, y: 50, scale: 1.06 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: snap }, 39.05);
+        tl.to("#cam", { opacity: 0, scale: 0.5, duration: 0.45, ease: "power3.in" }, 39.7); // model resolves into the logo
+        tl.fromTo("#logo", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.5, ease: expo }, 39.9);
+        tl.fromTo("#cta .btn", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.4, ease: snap }, 40.45);
+        tl.fromTo("#cta .url", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, ease: out }, 40.6);
+        tl.fromTo("#cta .bring", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, ease: out }, 40.75);
+        tl.fromTo("#cta .legal", { opacity: 0 }, { opacity: 1, duration: 0.35 }, 40.9);
+
+        window.__timelines["main"] = tl;
+      })();
+    </script>
+  </body>
+</html>
